@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.digitalchina.dao.ApiOfflineMeetDao" >
+  <resultMap id="BaseResultMap" type="com.digitalchina.domain.ApiOfflineMeet" >
+    <id column="id" property="id" jdbcType="INTEGER" />
+    <result column="user_id" property="userId" jdbcType="INTEGER" />
+    <result column="service_id" property="serviceId" jdbcType="INTEGER" />
+    <result column="res_req" property="resReq" jdbcType="VARCHAR" />
+    <result column="purpose" property="purpose" jdbcType="VARCHAR" />
+    <result column="contact" property="contact" jdbcType="VARCHAR" />
+    <result column="contact_no" property="contactNo" jdbcType="VARCHAR" />
+    <result column="created_time" property="createdTime" jdbcType="TIMESTAMP" />
+    <result column="created_by" property="createdBy" jdbcType="VARCHAR" />
+    <result column="updated_time" property="updatedTime" jdbcType="TIMESTAMP" />
+    <result column="type" property="type" jdbcType="CHAR" />
+    <result column="process_flag" property="processFlag" jdbcType="CHAR" />
+    <result column="cname" property="cname" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, service_id, res_req, purpose, contact, contact_no, created_time, created_by, 
+    updated_time, updated_by
+  </sql>
+  <insert id="insert" parameterType="com.digitalchina.domain.ApiOfflineMeet" >
+    insert into api_offline_meet (id, user_id, service_id, 
+      res_req, purpose, contact, 
+      contact_no, created_time, created_by, 
+      updated_time, updated_by,type,process_flag,cname)
+    values (#{id,jdbcType=INTEGER}, #{userId,jdbcType=INTEGER}, #{serviceId,jdbcType=INTEGER}, 
+      #{resReq,jdbcType=VARCHAR}, #{purpose,jdbcType=VARCHAR}, #{contact,jdbcType=VARCHAR}, 
+      #{contactNo,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}, 
+      #{updatedTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR},#{type,jdbcType=CHAR},#{processFlag,jdbcType=CHAR},#{cname,jdbcType=VARCHAR})
+  </insert>
+</mapper>

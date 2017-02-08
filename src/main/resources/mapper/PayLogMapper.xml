@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.digitalchina.dao.PayLogMapper">
+  <resultMap id="BaseResultMap" type="com.digitalchina.domain.PayLog">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+    <result column="pay_type" jdbcType="VARCHAR" property="payType" />
+    <result column="pay_date" jdbcType="TIMESTAMP" property="payDate" />
+    <result column="pay_count" jdbcType="DOUBLE" property="payCount" />
+    <result column="pay_status" jdbcType="INTEGER" property="payStatus" />
+    <result column="payer" jdbcType="VARCHAR" property="payer" />
+    <result column="recorder" jdbcType="VARCHAR" property="recorder" />
+    <result column="objectId" jdbcType="VARCHAR" property="objectid" />
+    <result column="fail_reason" jdbcType="VARCHAR" property="failReason" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="udpated_time" jdbcType="TIMESTAMP" property="udpatedTime" />
+    <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="pay_channel" jdbcType="VARCHAR" property="payChannel" />
+    <result column="pay_title" jdbcType="VARCHAR" property="payTitle" />
+  </resultMap>
+
+
+  <insert id="insert" parameterType="com.digitalchina.domain.PayLog" >
+    insert into pay_log (id, order_num, pay_type,
+    pay_date, pay_count, pay_status,
+    payer, recorder, objectId,
+    fail_reason, area, created_time,
+    created_by, udpated_time, updated_by,
+    create_user_id, pay_channel, pay_title
+    )
+    values (#{id,jdbcType=INTEGER}, #{orderNum,jdbcType=VARCHAR}, #{payType,jdbcType=VARCHAR},
+    #{payDate,jdbcType=TIMESTAMP}, #{payCount,jdbcType=DOUBLE}, #{payStatus,jdbcType=INTEGER},
+    #{payer,jdbcType=VARCHAR}, #{recorder,jdbcType=VARCHAR}, #{objectid,jdbcType=VARCHAR},
+    #{failReason,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP},
+    #{createdBy,jdbcType=VARCHAR}, #{udpatedTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR},
+    #{createUserId,jdbcType=VARCHAR}, #{payChannel,jdbcType=VARCHAR}, #{payTitle,jdbcType=VARCHAR}
+    )
+  </insert>
+
+  <select id="getPayLogByTime"  parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    SELECT * FROM pay_log where 1=1
+    <if test="startTime!= null">
+      AND created_time &gt;=#{startTime}
+    </if>
+    <if test="endTime!= null">
+      AND created_time &lt;#{endTime}
+    </if>
+  </select>
+
+</mapper>

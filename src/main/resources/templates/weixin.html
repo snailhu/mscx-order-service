@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>微信支付</title>
+</head>
+<body>
+
+<div align="center" id="qrcode">
+</div>
+</body>
+<script src="../static/js/qrcode.js" th:src="@{/js/qrcode.js}"></script>
+<script th:inline="javascript">
+    var codeUrl=[[${codeUrl}]];
+    function makeqrcode() {
+        var qr = qrcode(10, 'L');
+        qr.addData(codeUrl);
+        qr.make();
+        var wording = document.createElement('p');
+        wording.innerHTML = "扫我，扫我";
+        var code = document.createElement('DIV');
+        code.innerHTML = qr.createImgTag();
+        var element = document.getElementById("qrcode");
+        element.appendChild(wording);
+        element.appendChild(code);
+    }
+
+    makeqrcode();
+</script>
+</html>

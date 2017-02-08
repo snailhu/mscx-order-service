@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.digitalchina.dao.OrderInfoMapper">
+  <resultMap id="BaseResultMap" type="com.digitalchina.domain.OrderInfo">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+    <result column="order_status" jdbcType="INTEGER" property="orderStatus" />
+    <result column="order_time" jdbcType="TIMESTAMP" property="orderTime" />
+    <result column="order_cash_total" jdbcType="DOUBLE" property="orderCashTotal" />
+    <result column="order_type" jdbcType="VARCHAR" property="orderType" />
+    <result column="user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="udpated_time" jdbcType="TIMESTAMP" property="udpatedTime" />
+    <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="one_resource_price" jdbcType="DOUBLE" property="oneResourcePrice" />
+    <result column="order_user_name" jdbcType="VARCHAR" property="orderUserName" />
+    <result column="pay_type" jdbcType="VARCHAR" property="payType" />
+    <result column="have_pay" jdbcType="DOUBLE" property="havePay" />
+  </resultMap>
+
+  <insert id="insert" parameterType="com.digitalchina.domain.OrderInfo" useGeneratedKeys="true" keyProperty="id">
+    insert into order_info (order_num, order_status,
+      order_time, order_cash_total, order_type,
+      user_id, area, created_time,
+      created_by, udpated_time, updated_by,
+      create_user_id, one_resource_price,order_user_name,pay_type,have_pay)
+    values ( #{orderNum,jdbcType=VARCHAR}, #{orderStatus,jdbcType=INTEGER},
+      #{orderTime,jdbcType=TIMESTAMP}, #{orderCashTotal,jdbcType=DOUBLE}, #{orderType,jdbcType=VARCHAR},
+      #{userId,jdbcType=VARCHAR}, #{area,jdbcType=VARCHAR}, #{createdTime,jdbcType=TIMESTAMP},
+      #{createdBy,jdbcType=VARCHAR}, #{udpatedTime,jdbcType=TIMESTAMP}, #{updatedBy,jdbcType=VARCHAR},
+      #{createUserId,jdbcType=VARCHAR}, #{oneResourcePrice,jdbcType=DOUBLE},#{orderUserName,jdbcType=VARCHAR},
+      #{payType,jdbcType=VARCHAR},#{havePay,jdbcType=DOUBLE})
+  </insert>
+  <select id="findByOrderNum" parameterType="String" resultMap="BaseResultMap">
+    SELECT * FROM order_info where order_num = #{orderNum}
+  </select>
+
+  <select id="findByOrderId" parameterType="int" resultMap="BaseResultMap">
+    SELECT * FROM order_info where id = #{orderId}
+  </select>
+
+  <select id="countByConf" parameterType="java.util.HashMap" resultType="int">
+    SELECT count(*) FROM order_info
+    where 1=1
+    <if test="orderStatus!= null">
+      AND order_status = #{orderStatus}
+    </if>
+    <if test="userName!= null and userName !=''">
+      AND order_user_name = #{userName}
+    </if>
+    <if test="orderType!= null">
+      AND order_type = #{orderType}
+    </if>
+    <if test="startTime!= null">
+      AND order_time &gt;=#{startTime}
+    </if>
+    <if test="endTime!= null">
+      AND order_time &lt;=#{endTime}
+    </if>
+
+  </select>
+  <!--查询当前用户订单总数-->
+  <select id="getSelfOrderListCount" parameterType="java.util.HashMap" resultType="int">
+    SELECT count(*) FROM order_info
+    where 1=1
+    <if test="orderStatus!= null">
+      AND order_status = #{orderStatus}
+    </if>
+    <if test="userId!= null">
+      AND user_id = #{userId}
+    </if>
+    <if test="area!= null">
+      AND area = #{area}
+    </if>
+  </select>
+
+<!--查看用户当前订单列表-->
+  <select id="getOrderInfoListByUser" parameterType="java.util.HashMap" resultMap="BaseResultMap">
+    SELECT * FROM order_info
+    where 1=1
+    <if test="orderStatus!= null">
+      AND order_status = #{orderStatus}
+    </if>
+    <if test="userId!= null">
+      AND user_id = #{userId}
+    </if>
+    <if test="area!= null">
+      AND area = #{area}
+    </if>
+    ORDER BY created_time DESC  limit #{startIndex},#{endIndex}
+  </select>
+
+
+
+
+  <!--查看用户当前订单列表消费总金额-->
+  <select id="getUserConsumeCash" parameterType="java.util.HashMap" resultType="Object">
+    SELECT SUM(order_cash_total) FROM order_info
+    where 1=1
+    <if test="orderStatus!= null">
+      AND order_status = #{orderStatus}
+    </if>
+    <if test="userId!= null">
+      AND user_id = #{userId}
+    </if>
+    <if test="area!= null">
+      AND area = #{area}
+    </if>
+  </select>
+
+
+
+
+
+  <update id="updateOrderInfo" parameterType="com.digitalchina.domain.OrderInfo" >
+    UPDATE order_info
+    <trim prefix="set" suffixOverrides=",">
+      <if test="orderNum!=null">order_num=#{orderNum},</if>
+      <if test="orderStatus!=null">order_status=#{orderStatus},</if>
+      <if test="orderTime!=null">order_time=#{orderTime},</if>
+      <if test="orderCashTotal!=null">order_cash_total=#{orderCashTotal},</if>
+      <if test="orderType!=null">order_type=#{orderType},</if>
+      <if test="userId!=null">user_id=#{userId},</if>
+      <if test="area!=null">area=#{area},</if>
+      <if test="createdTime!=null">created_time=#{createdTime},</if>
+      <if test="createdBy!=null">created_by=#{createdBy},</if>
+      <if test="udpatedTime!=null">udpated_time=#{udpatedTime},</if>
+      <if test="updatedBy!=null">updated_by=#{updatedBy},</if>
+      <if test="createUserId!=null">create_user_id=#{createUserId},</if>
+      <if test="oneResourcePrice!=null">one_resource_price=#{oneResourcePrice},</if>
+      <if test="payType!=null">pay_type=#{payType},</if>
+      <if test="havePay!=null">have_pay=#{havePay},</if>
+    </trim>
+    WHERE order_num=#{orderNum}
+  </update>
+</mapper>

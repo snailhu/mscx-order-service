@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.digitalchina.dao.RouterRuleMapper">
+  <resultMap id="BaseResultMap" type="com.digitalchina.domain.RouterRule">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="order_detail_id" jdbcType="INTEGER" property="orderDetailId" />
+    <result column="effective_time" jdbcType="TIMESTAMP" property="effectiveTime" />
+    <result column="ineffective_time" jdbcType="TIMESTAMP" property="ineffectiveTime" />
+    <result column="effective_number" jdbcType="INTEGER" property="effectiveNumber" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="udpated_time" jdbcType="TIMESTAMP" property="udpatedTime" />
+    <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
+    <result column="create_user_id" jdbcType="VARCHAR" property="createUserId" />
+    <result column="order_user_id" jdbcType="VARCHAR" property="orderUserId" />
+    <result column="source_id" jdbcType="INTEGER" property="sourceId" />
+    <result column="source_type" jdbcType="VARCHAR" property="sourceType" />
+    <result column="source_status" jdbcType="VARCHAR" property="sourceStatus" />
+    <result column="order_num" jdbcType="VARCHAR" property="orderNum" />
+  </resultMap>
+
+
+  <resultMap id="IsFreePurchase" type="com.digitalchina.dto.IsFreePurchaseDto">
+    <result column="order_user_id" jdbcType="VARCHAR" property="userId" />
+    <result column="effective_number" jdbcType="INTEGER" property="effectiveNum" />
+    <result column="count_num" jdbcType="INTEGER" property="countNum" />
+    <result column="source_status" jdbcType="VARCHAR" property="sourceStatus" />
+  </resultMap>
+
+
+  <select id="getIfFreeDto" parameterType="java.util.HashMap" resultMap="IsFreePurchase">
+    SELECT order_user_id,source_status, min(effective_number)as effective_number,count(1) as count_num  FROM router_rule
+    where 1=1
+    <if test="userId != null">
+      AND order_user_id = #{userId}
+    </if>
+    <if test="sourceId != null">
+      AND source_id = #{sourceId}
+    </if>
+    <if test="sourceType != null ">
+      AND source_type = #{sourceType}
+    </if>
+    <if test="nowDate!= null">
+      AND ineffective_time &gt;=#{nowDate}
+    </if> GROUP BY order_user_id
+  </select>
+
+
+  <insert id="insert" parameterType="com.digitalchina.domain.RouterRule" useGeneratedKeys="true" keyProperty="id">
+    insert into router_rule (order_detail_id, effective_time,
+      ineffective_time, effective_number, area, 
+      created_time, created_by, udpated_time, 
+      updated_by,create_user_id,order_user_id,source_id,source_type,source_status,order_num)
+    values (#{orderDetailId,jdbcType=INTEGER}, #{effectiveTime,jdbcType=TIMESTAMP},
+      #{ineffectiveTime,jdbcType=TIMESTAMP}, #{effectiveNumber,jdbcType=INTEGER}, #{area,jdbcType=VARCHAR}, 
+      #{createdTime,jdbcType=TIMESTAMP}, #{createdBy,jdbcType=VARCHAR}, #{udpatedTime,jdbcType=TIMESTAMP}, 
+      #{updatedBy,jdbcType=VARCHAR},#{createUserId,jdbcType=VARCHAR},#{orderUserId,jdbcType=VARCHAR},#{sourceId,jdbcType=INTEGER},
+      #{sourceType,jdbcType=VARCHAR},#{sourceStatus,jdbcType=VARCHAR},#{orderNum,jdbcType=VARCHAR})
+  </insert>
+
+  <select id="getRouterRuleByDetailId" parameterType="int" resultMap="BaseResultMap">
+    SELECT * FROM router_rule where order_detail_id = #{orderDetailId}
+  </select>
+
+  <select id="getLastRule"  resultMap="BaseResultMap">
+    SELECT * FROM router_rule where id =(select max(id) from router_rule)
+  </select>
+
+  <select id="getByAllId" parameterType="java.util.HashMap" resultType="int">
+    SELECT count(*) FROM router_rule
+    where 1=1
+    <if test="userId != null">
+      AND order_user_id = #{userId}
+     </if>
+    <if test="sourceId != null">
+      AND source_id = #{sourceId}
+    </if>
+    <if test="sourceType != null ">
+      AND source_type = #{sourceType}
+    </if>
+    <if test="nowDate!= null">
+      AND ineffective_time &gt;=#{nowDate}
+    </if>
+  </select>
+
+
+  <select id="getLastRuleByDetailId"   parameterType="int"  resultMap="BaseResultMap">
+    SELECT * FROM router_rule where order_detail_id = #{orderDetailId} order by id desc limit 1
+  </select>
+
+<!--根据订单单号 获取路由-->
+  <select id="getRouterRuleByOrderNum"   parameterType="String"  resultMap="BaseResultMap">
+    SELECT * FROM router_rule where order_num = #{orderNum}
+  </select>
+
+  <update id="updateStatus" parameterType="map">
+    UPDATE router_rule
+    SET source_status = #{status}
+    WHERE id = #{id}
+  </update>
+
+
+</mapper>

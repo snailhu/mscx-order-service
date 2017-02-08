@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.digitalchina.dao.SerialNumMapper">
+  <resultMap id="BaseResultMap" type="com.digitalchina.domain.SerialNum">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="version" jdbcType="BIGINT" property="version" />
+    <result column="num_serial" jdbcType="BIGINT" property="numSerial" />
+    <result column="area" jdbcType="VARCHAR" property="area" />
+    <result column="created_time" jdbcType="TIMESTAMP" property="createdTime" />
+    <result column="created_by" jdbcType="VARCHAR" property="createdBy" />
+    <result column="udpated_time" jdbcType="TIMESTAMP" property="udpatedTime" />
+    <result column="updated_by" jdbcType="VARCHAR" property="updatedBy" />
+  </resultMap>
+</mapper>
